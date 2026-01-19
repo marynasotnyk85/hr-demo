@@ -1,0 +1,51 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th *ngFor="let c of columns">
+        <button
+          *ngIf="c.sortable; else plain"
+          type="button"
+          class="sort"
+          (click)="toggleSort(c.key)"
+          [attr.aria-sort]="ariaSort(c.key)"
+        >
+          {{ c.header }}
+        </button>
+        <ng-template #plain>{{ c.header }}</ng-template>
+      </th>
+      <th *ngIf="actions">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let row of rows; trackBy: trackById">
+      <td *ngFor="let c of columns">
+        {{ c.cell ? c.cell(row) : row[c.key] + "" }}
+      </td>
+      <td *ngIf="actions">
+        <ng-content select="[row-actions]" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="pager" *ngIf="total > 0">
+  <button type="button" (click)="prev()" [disabled]="state.page <= 1">
+    Prev
+  </button>
+  <span>Page {{ state.page }}</span>
+  <button type="button" (click)="next()" [disabled]="state.page >= maxPage">
+    Next
+  </button>
+
+  <label class="sr-only" for="size">Rows per page</label>
+  <select
+    id="size"
+    [value]="state.size"
+    (change)="changeSize($any($event.target).value)"
+  >
+    <option [value]="10">10</option>
+    <option [value]="20">20</option>
+    <option [value]="50">50</option>
+  </select>
+</div>

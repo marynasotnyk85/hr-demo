@@ -1,0 +1,23 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "firstName": "Maryna",
+      "lastName": "Sotnyk",
+      "email": "maryna.sotnyk@example.com",
+      "departmentId": 1,
+      "title": "Front-End Engineer",
+      "status": "active",
+      "salary": 65000,
+      "hireDate": "2023-05-12",
+      "managerId": null,
+      "avatarUrl": "",
+      "notes": "Strong Angular + React background."
+    }
+  ],
+  "departments": [
+    { "id": 1, "name": "Engineering" },
+    { "id": 2, "name": "HR" },
+    { "id": 3, "name": "Finance" }
+  ]
+}

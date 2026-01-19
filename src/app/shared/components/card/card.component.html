@@ -1,0 +1,9 @@
+<section class="card" [attr.aria-label]="ariaLabel">
+    <header class="card_header" *ngIf="title">
+        <h2 class="card_title"> {{title}}</h2>
+        <ng-content select="[card-action]"/>
+    </header>
+    <div class="card_content">
+        <ng-content />
+    </div>
+</section>
