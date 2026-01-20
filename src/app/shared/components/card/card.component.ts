@@ -10,6 +10,6 @@ import { Component, Input } from '@angular/core';
 })
 export class CardComponent {
   @Input() title?: string;
-  @Input() arialLabel?: string;
+  @Input() ariaLabel?: string;
 
 }

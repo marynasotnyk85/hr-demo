@@ -57,4 +57,8 @@ export class EmployeesApi {
   delete$(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  all$() {
+    return this.http.get<Employee[]>(this.baseUrl);
+  }
 }

@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { Department } from "../../shared/models/department.model";
 
 @Injectable({providedIn:'root'})
-export class DepatmentsApi {
+export class DepartmentsApi {
     private http= inject(HttpClient);
     private baseUrl = '/api/departments';
 
