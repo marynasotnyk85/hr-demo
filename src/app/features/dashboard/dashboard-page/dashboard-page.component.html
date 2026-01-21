@@ -1,1 +1,72 @@
-<p>dashboard-page works!</p>
+<p class="sr-only" aria-live="polite">{{ ariaLiveText() }}</p>
+
+<div class="page-title">
+  <h1 class="h1">HR Dashboard</h1>
+
+  <div class="actions">
+    <button class="btn" type="button" (click)="reload()" [disabled]="loading()">Reload</button>
+    <a class="btn btn-primary" routerLink="/employees">View employees</a>
+  </div>
+</div>
+
+@if (loading()) {
+  <app-card title="Loading">
+    <p>Loading…</p>
+  </app-card>
+} @else if (error()) {
+  <app-card title="Dashboard error">
+    <p role="alert">{{ error() }}</p>
+    <button class="btn btn-primary" type="button" (click)="reload()">Retry</button>
+  </app-card>
+} @else {
+  <div class="grid grid-4">
+    <app-card title="Headcount">
+      <div class="metric">
+        <div class="metric_value">{{ headcount() }}</div>
+        <div class="metric_sub">employees</div>
+      </div>
+    </app-card>
+
+    <app-card title="Departments">
+      <div class="metric">
+        <div class="metric_value">{{ departmentsCount() }}</div>
+        <div class="metric_sub">teams</div>
+      </div>
+    </app-card>
+
+    <app-card title="Avg salary">
+      <div class="metric">
+        <div class="metric_value">{{ avgSalary() | currency: 'EUR':'symbol':'1.0-0' }}</div>
+        <span class="badge">Avg</span>
+      </div>
+    </app-card>
+
+  </div>
+
+  <div style="height: 14px;"></div>
+
+  <div class="grid grid-3">
+    <app-card title="Active">
+      <div class="metric">
+        <div class="metric_value">{{ activeCount() }}</div>
+        <div class="metric_sub">active</div>
+      </div>
+    </app-card>
+
+    <app-card title="On leave">
+      <div class="metric">
+        <div class="metric_value">{{ onLeaveCount() }}</div>
+        <div class="metric_sub">on leave</div>
+      </div>
+    </app-card>
+
+    <app-card title="Inactive">
+      <div class="metric">
+        <div class="metric_value">{{ inactiveCount() }}</div>
+        <div class="metric_sub">inactive</div>
+      </div>
+    </app-card>
+  </div>
+
+  <div style="height: 14px;"></div>
+}

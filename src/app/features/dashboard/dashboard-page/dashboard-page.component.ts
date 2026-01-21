@@ -7,6 +7,7 @@ import { CardComponent } from '../../../shared/components/card/card.component';
 import { EmployeesApi } from '../../../core/api/employees.api';
 import { DepartmentsApi } from '../../../core/api/departments.api';
 import { Employee } from '../../../shared/models/employee.model';
+import { RouterLink } from '@angular/router';
 
 type Status = 'active' | 'inactive' | 'on_leave';
 type DashboardVm =
@@ -23,6 +24,7 @@ type DashboardVm =
     DatePipe,
     CurrencyPipe,
     CardComponent,
+    RouterLink
   ],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss'
@@ -102,7 +104,9 @@ export class DashboardPageComponent {
   });
 
   trackById = (_: number, e: Employee) => e.id;
-
+   reload(): void {
+    this.reload$.next();
+  }
 
   constructor() {
     effect((): void => {
