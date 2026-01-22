@@ -1,8 +1,5 @@
-<p class="sr-only" aria-live="polite">{{ ariaLiveText() }}</p>
-
 <div class="page-title">
   <h1 class="h1">HR Dashboard</h1>
-
   <div class="actions">
     <button class="btn" type="button" (click)="reload()" [disabled]="loading()">Reload</button>
     <a class="btn btn-primary" routerLink="/employees">View employees</a>
@@ -10,63 +7,92 @@
 </div>
 
 @if (loading()) {
-  <app-card title="Loading">
-    <p>Loading…</p>
-  </app-card>
+  <app-card title="Loading"><p>Loading…</p></app-card>
 } @else if (error()) {
   <app-card title="Dashboard error">
     <p role="alert">{{ error() }}</p>
     <button class="btn btn-primary" type="button" (click)="reload()">Retry</button>
   </app-card>
 } @else {
-  <div class="grid grid-4">
-    <app-card title="Headcount">
-      <div class="metric">
-        <div class="metric_value">{{ headcount() }}</div>
-        <div class="metric_sub">employees</div>
-      </div>
-    </app-card>
 
-    <app-card title="Departments">
-      <div class="metric">
-        <div class="metric_value">{{ departmentsCount() }}</div>
-        <div class="metric_sub">teams</div>
-      </div>
-    </app-card>
+  <!-- SECTION: Overview -->
+  <div class="section">
+    <div class="section_head">
+      <h2 class="section_title">Overview</h2>
+      <p class="section_desc">Quick KPIs for the current workforce.</p>
+    </div>
 
-    <app-card title="Avg salary">
-      <div class="metric">
-        <div class="metric_value">{{ avgSalary() | currency: 'EUR':'symbol':'1.0-0' }}</div>
-        <span class="badge">Avg</span>
-      </div>
-    </app-card>
+    <div class="grid grid-3">
+      <!-- Keep your cards, but add tiny visuals (see next section) -->
+      <app-card title="Headcount">
+        <div class="metric">
+          <div class="metric_value">{{ headcount() }}</div>
+          <div class="metric_sub">employees</div>
+        </div>
+        <div class="spark spark--blue" aria-hidden="true"></div>
+      </app-card>
 
+      <app-card title="Departments">
+        <div class="metric">
+          <div class="metric_value">{{ departmentsCount() }}</div>
+          <div class="metric_sub">teams</div>
+        </div>
+        <div class="spark spark--purple" aria-hidden="true"></div>
+      </app-card>
+
+      <app-card title="Avg salary">
+        <div class="metric">
+          <div class="metric_value">{{ avgSalary() | currency:'EUR':'symbol':'1.0-0' }}</div>
+          <span class="badge">Avg</span>
+        </div>
+        <div class="spark spark--green" aria-hidden="true"></div>
+      </app-card>
+    </div>
   </div>
 
-  <div style="height: 14px;"></div>
+  <div class="section-divider" aria-hidden="true"></div>
 
-  <div class="grid grid-3">
-    <app-card title="Active">
-      <div class="metric">
-        <div class="metric_value">{{ activeCount() }}</div>
-        <div class="metric_sub">active</div>
-      </div>
-    </app-card>
+  <!-- SECTION: Workforce status -->
+  <div class="section">
+    <div class="section_head">
+      <h2 class="section_title">Workforce status</h2>
+      <p class="section_desc">Distribution by employment status.</p>
+    </div>
 
-    <app-card title="On leave">
-      <div class="metric">
-        <div class="metric_value">{{ onLeaveCount() }}</div>
-        <div class="metric_sub">on leave</div>
-      </div>
-    </app-card>
+    <div class="grid grid-3">
+      <app-card title="Active">
+        <div class="metric">
+          <div class="metric_value">{{ activeCount() }}</div>
+          <div class="metric_sub">active</div>
+        </div>
+        <div class="progress">
+          <div class="progress_bar" [style.width.%]="activePct()"></div>
+        </div>
+      </app-card>
 
-    <app-card title="Inactive">
-      <div class="metric">
-        <div class="metric_value">{{ inactiveCount() }}</div>
-        <div class="metric_sub">inactive</div>
-      </div>
-    </app-card>
+      <app-card title="On leave">
+        <div class="metric">
+          <div class="metric_value">{{ onLeaveCount() }}</div>
+          <div class="metric_sub">on leave</div>
+        </div>
+        <div class="progress">
+          <div class="progress_bar" [style.width.%]="onLeavePct()"></div>
+        </div>
+      </app-card>
+
+      <app-card title="Inactive">
+        <div class="metric">
+          <div class="metric_value">{{ inactiveCount() }}</div>
+          <div class="metric_sub">inactive</div>
+        </div>
+        <div class="progress">
+          <div class="progress_bar" [style.width.%]="inactivePct()"></div>
+        </div>
+      </app-card>
+    </div>
   </div>
 
-  <div style="height: 14px;"></div>
+  <div class="section-divider" aria-hidden="true"></div>
+
+
 }

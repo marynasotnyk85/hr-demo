@@ -1,8 +1,8 @@
 import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, computed, effect, inject, signal} from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { forkJoin, of, Subject } from 'rxjs';
-import { catchError, finalize, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { EmployeesApi } from '../../../core/api/employees.api';
 import { DepartmentsApi } from '../../../core/api/departments.api';
@@ -18,16 +18,9 @@ type DashboardVm =
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [
-    NgIf,
-    NgFor,
-    DatePipe,
-    CurrencyPipe,
-    CardComponent,
-    RouterLink
-  ],
+  imports: [NgIf, NgFor, DatePipe, CurrencyPipe, CardComponent, RouterLink],
   templateUrl: './dashboard-page.component.html',
-  styleUrl: './dashboard-page.component.scss'
+  styleUrl: './dashboard-page.component.scss',
 })
 export class DashboardPageComponent {
   private employeesApi = inject(EmployeesApi);
@@ -35,7 +28,7 @@ export class DashboardPageComponent {
 
   private readonly reload$ = new Subject<void>();
 
-   private readonly vm$ = this.reload$.pipe(
+  private readonly vm$ = this.reload$.pipe(
     startWith(void 0),
     switchMap(() =>
       forkJoin({
@@ -59,23 +52,25 @@ export class DashboardPageComponent {
       )
     )
   );
-  
-    /** Convert Observable -> Signal*/
-  readonly vm = toSignal(this.vm$, { initialValue: { status: 'loading' } as DashboardVm });
 
-   /* * Widgets (computed from vm) */
+  /** Convert Observable -> Signal*/
+  readonly vm = toSignal(this.vm$, {
+    initialValue: { status: 'loading' } as DashboardVm,
+  });
+
+  /* * Widgets (computed from vm) */
   readonly employees = computed(() => {
     const vm = this.vm();
     return vm.status === 'ready' ? vm.employees : [];
   });
 
   readonly departmentsCount = computed(() => {
-     const vm = this.vm();
-     return vm.status === 'ready' ? vm.departmentsCount : 0;}
-  );
+    const vm = this.vm();
+    return vm.status === 'ready' ? vm.departmentsCount : 0;
+  });
 
   readonly loading = computed(() => this.vm().status === 'loading');
-  readonly error = computed(() =>{
+  readonly error = computed(() => {
     const vm = this.vm();
     return vm.status === 'error' ? vm.message : null;
   });
@@ -89,29 +84,46 @@ export class DashboardPageComponent {
   readonly avgSalary = computed(() => {
     const emps = this.employees();
     if (!emps.length) return 0;
-    const sum = emps.reduce((acc, e) => acc + (Number(e.salary || 0)),0);
-    return Math.round(sum/emps.length);
-  })
+    const sum = emps.reduce((acc, e) => acc + Number(e.salary || 0), 0);
+    return Math.round(sum / emps.length);
+  });
 
-   private countByStatus(status: Status): number {
-    return this.employees().reduce((acc, e) => acc + (e.status === status ? 1 : 0), 0);
+  private countByStatus(status: Status): number {
+    return this.employees().reduce(
+      (acc, e) => acc + (e.status === status ? 1 : 0),
+      0
+    );
   }
 
-   readonly ariaLiveText = computed(() => {
+  readonly ariaLiveText = computed(() => {
     if (this.loading()) return 'Loading dashboard';
     if (this.error()) return 'Dashboard failed to load';
     return `Dashboard loaded. ${this.headcount()} employees total.`;
   });
 
   trackById = (_: number, e: Employee) => e.id;
-   reload(): void {
+  reload(): void {
     this.reload$.next();
+  }
+
+  readonly activePct = computed(() =>
+    this.pct(this.activeCount(), this.headcount())
+  );
+  readonly onLeavePct = computed(() =>
+    this.pct(this.onLeaveCount(), this.headcount())
+  );
+  readonly inactivePct = computed(() =>
+    this.pct(this.inactiveCount(), this.headcount())
+  );
+
+  private pct(part: number, total: number): number {
+    if (!total) return 0;
+    return Math.round((part / total) * 100);
   }
 
   constructor() {
     effect((): void => {
-     console.log('Dashboard vm:', this.vm());
+      console.log('Dashboard vm:', this.vm());
     });
   }
-
 }
