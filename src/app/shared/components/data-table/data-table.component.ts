@@ -12,7 +12,7 @@ export interface TableState<T> {
   page: number; 
   size: number;
   sort?: keyof T;
-  dir?: 'asc' | 'desc';
+  order?: 'asc' | 'desc';
 }
 
 @Component({
@@ -39,16 +39,16 @@ export class DataTableComponent<T extends {id:number}>{
 
   toggleSort(key: keyof T) {
     if (this.state.sort !== key) {
-      this.stateChange.emit({ ...this.state, sort: key, dir: 'asc', page: 1 });
+      this.stateChange.emit({ ...this.state, sort: key, order: 'asc', page: 1 });
       return;
     }
-    const nextDir = this.state.dir === 'asc' ? 'desc' : 'asc';
-    this.stateChange.emit({ ...this.state, dir: nextDir, page: 1 });
+    const nextDir = this.state.order === 'asc' ? 'desc' : 'asc';
+    this.stateChange.emit({ ...this.state, order: nextDir, page: 1 });
   }
 
   ariaSort(key: keyof T) {
     if (this.state.sort !== key) return 'none';
-    return this.state.dir === 'asc' ? 'ascending' : 'descending';
+    return this.state.order === 'asc' ? 'ascending' : 'descending';
   }
 
   prev() {
