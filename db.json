@@ -43,18 +43,15 @@
       "notes": "Design systems and accessibility focus."
     },
     {
-      "id": 4,
       "firstName": "Luca",
       "lastName": "Ferrari",
       "email": "luca.ferrari@example.com",
-      "departmentId": 2,
       "title": "Back-End Engineer",
+      "departmentId": 1,
       "status": "active",
       "salary": 70000,
       "hireDate": "2022-11-03",
-      "managerId": 6,
-      "avatarUrl": "",
-      "notes": "API integration and performance tuning."
+      "id": 4
     },
     {
       "id": 5,

@@ -8,8 +8,9 @@ import { EmployeesApi } from '../../../core/api/employees.api';
 import { DepartmentsApi } from '../../../core/api/departments.api';
 import { Employee } from '../../../shared/models/employee.model';
 import { RouterLink } from '@angular/router';
+import { EmployeeStatus} from '../../../shared/models/employee.model'
 
-type Status = 'active' | 'inactive' | 'on_leave';
+
 type DashboardVm =
   | { status: 'loading' }
   | { status: 'error'; message: string }
@@ -88,7 +89,7 @@ export class DashboardPageComponent {
     return Math.round(sum / emps.length);
   });
 
-  private countByStatus(status: Status): number {
+  private countByStatus(status: EmployeeStatus): number {
     return this.employees().reduce(
       (acc, e) => acc + (e.status === status ? 1 : 0),
       0

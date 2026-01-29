@@ -1,1 +1,170 @@
-<p>employees-form works!</p>
+<p class="sr-only" aria-live="polite">
+  @if (loading()) {
+    Loading employee form
+  } @else if (serverError()) {
+    {{ serverError() }}
+  } @else {
+    Employee form ready
+  }
+</p>
+
+  <div class="page">
+    <header class="page-header">
+      <div class="title">
+        <h1 class="h1">{{ isEdit() ? "Edit employee" : "Add employee" }}</h1>
+        <p class="sub">
+          Fill in details to {{ isEdit() ? "update" : "create" }} an employee.
+        </p>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="card-head">
+        {{ isEdit() ? "Employee details" : "New employee" }}
+      </div>
+
+      <div class="card-body">
+        <form id="employeeForm" [formGroup]="form" (ngSubmit)="submit()">
+          <div class="form-grid">
+            <label class="field">
+              <span class="label">First name</span>
+              <input
+                class="input"
+                type="text"
+                formControlName="firstName"
+                autocomplete="given-name"
+                [attr.aria-invalid]="f.firstName.touched && f.firstName.invalid"
+              />
+              @if (hasError("firstName", "required")) {
+                <small class="hint hint--error">First name is required.</small>
+              } @else if (hasError("firstName", "minlength")) {
+                <small class="hint hint--error">Minimum 2 characters.</small>
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Last name</span>
+              <input
+                class="input"
+                type="text"
+                formControlName="lastName"
+                autocomplete="family-name"
+                [attr.aria-invalid]="f.lastName.touched && f.lastName.invalid"
+              />
+              @if (hasError("lastName", "required")) {
+                <small class="hint hint--error">Last name is required.</small>
+              } @else if (hasError("lastName", "minlength")) {
+                <small class="hint hint--error">Minimum 2 characters.</small>
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Email</span>
+              <input
+                class="input"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                [attr.aria-invalid]="f.email.touched && f.email.invalid"
+              />
+              @if (hasError("email", "required")) {
+                <small class="hint hint--error">Email is required.</small>
+              } @else if (hasError("email", "email")) {
+                <small class="hint hint--error"
+                  >Please enter a valid email.</small
+                >
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Title</span>
+              <input
+                class="input"
+                type="text"
+                formControlName="title"
+                autocomplete="organization-title"
+                [attr.aria-invalid]="f.title.touched && f.title.invalid"
+              />
+              @if (hasError("title", "required")) {
+                <small class="hint hint--error">Title is required.</small>
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Department</span>
+              <select
+                class="select"
+                formControlName="departmentId"
+                [attr.aria-invalid]="
+                  f.departmentId.touched && f.departmentId.invalid
+                "
+              >
+                <option [ngValue]="null">Select…</option>
+                @for (d of departments(); track d.id) {
+                  <option [ngValue]="d.id">{{ d.name }}</option>
+                }
+              </select>
+              @if (hasError("departmentId", "required")) {
+                <small class="hint hint--error">Department is required.</small>
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Status</span>
+              <select class="select" formControlName="status">
+                <option value="active">Active</option>
+                <option value="on_leave">On leave</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="label">Salary (EUR)</span>
+              <input
+                class="input"
+                type="number"
+                formControlName="salary"
+                min="0"
+                step="1000"
+                [attr.aria-invalid]="f.salary.touched && f.salary.invalid"
+              />
+              @if (hasError("salary", "required")) {
+                <small class="hint hint--error">Salary is required.</small>
+              } @else if (hasError("salary", "min")) {
+                <small class="hint hint--error">Salary must be ≥ 0.</small>
+              }
+            </label>
+
+            <label class="field">
+              <span class="label">Hire date</span>
+              <input
+                class="input"
+                type="date"
+                formControlName="hireDate"
+                [attr.aria-invalid]="f.hireDate.touched && f.hireDate.invalid"
+              />
+              @if (hasError("hireDate", "required")) {
+                <small class="hint hint--error">Hire date is required.</small>
+              }
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="button" (click)="cancel()">
+              Cancel
+            </button>
+            <button class="btn btn-primary" type="submit" [disabled]="saving()">
+              {{
+                saving()
+                  ? "Saving…"
+                  : isEdit()
+                    ? "Save changes"
+                    : "Create employee"
+              }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+

@@ -10,7 +10,7 @@ export interface Employee {
   status: EmployeeStatus;
   salary: number;
   hireDate: string; 
-  managerId: number | null;
+  //managerId: number | null;
   avatarUrl?: string;
   notes?: string;
 }
