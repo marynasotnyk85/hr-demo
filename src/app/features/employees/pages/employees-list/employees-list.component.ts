@@ -3,16 +3,11 @@ import {
   computed,
   signal,
   inject,
-  effect,
   DestroyRef,
 } from '@angular/core';
-import {
-  DataTableComponent,
-  TableColumn,
-  TableState,
-} from '../../../../shared/components/data-table/data-table.component';
+import { DataTableComponent, TableColumn, TableState } from '../../../../shared/components/data-table/data-table.component';
 import { Employee } from '../../../../shared/models/employee.model';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   EmployeeListQuery,
   EmployeesApi,
@@ -70,6 +65,7 @@ export class EmployeesListComponent {
   private readonly departmentsApi = inject(DepartmentsApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   // UI state Signals
   readonly q = signal('');
@@ -102,9 +98,53 @@ export class EmployeesListComponent {
     return this.departmentNameById().get(id) ?? `#${id}`;
   }
 
+  readonly columns = computed(() => ([
+  {
+    key: 'lastName',
+    header: 'Name',
+    sortable: true,
+    cell: (e: Employee) => `${e.firstName} ${e.lastName}`,
+  },
+  { key: 'title', header: 'Title', sortable: true },
+  {
+    key: 'departmentId',
+    header: 'Department',
+    cell: (e: Employee) => this.departmentName(e.departmentId),
+  },
+  { key: 'status', header: 'Status', sortable: true },
+  {
+    key: 'salary',
+    header: 'Salary',
+    sortable: true,
+    cell: (e: Employee) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(Number(e.salary ?? 0)),
+  },
+  {
+    key: 'hireDate',
+    header: 'Hire date',
+    sortable: true,
+    cell: (e: Employee) => new Date(e.hireDate).toLocaleDateString('it-IT'),
+  },
+] satisfies TableColumn<Employee>[]));
+
+readonly tableState = computed<TableState<Employee>>(() => ({
+  page: this.page(),
+  size: this.pageSize(),
+  sort: this.sort() as keyof Employee,
+  order: this.order(),
+}));
+
+onTableStateChange(s: TableState<Employee>) {
+  this.page.set(s.page);
+  this.pageSize.set(s.size);
+
+  if (s.sort) this.sort.set(s.sort as EmployeeSortKey);
+  if (s.order) this.order.set(s.order);
+}
+
   constructor() {
     this.route.queryParamMap
       .pipe(
+        takeUntilDestroyed(this.destroyRef), 
         tap((qp) => {
           this.q.set(qp.get('q') ?? '');
           this.status.set((qp.get('status') as any) ?? '');
@@ -162,6 +202,7 @@ export class EmployeesListComponent {
 
   private readonly urlSync = this.query$
     .pipe(
+    takeUntilDestroyed(this.destroyRef), 
       tap((q) => {
         void this.router.navigate([], {
           relativeTo: this.route,
@@ -180,6 +221,7 @@ export class EmployeesListComponent {
       }),
     )
     .subscribe();
+
 
   //Data pipeline
   private readonly vm$ = combineLatest([

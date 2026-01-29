@@ -1,11 +1,12 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 
 export interface TableColumn<T> {
   key: keyof T;
   header: string;
   sortable?: boolean;
   cell?: (row: T) => string;
+  cellTpl?: TemplateRef<{ $implicit: T}>;
 }
 
 export interface TableState<T> {
@@ -18,7 +19,7 @@ export interface TableState<T> {
 @Component({
   selector: 'app-data-table',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [CommonModule],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.scss'
 })
@@ -30,6 +31,8 @@ export class DataTableComponent<T extends {id:number}>{
   @Input() actions = false;
 
   @Output() stateChange = new EventEmitter<TableState<T>>();
+  @ContentChild('rowActions', { read: TemplateRef }) 
+  actionsTemplate?: TemplateRef<any>;
 
   get maxPage() {
     return Math.max(1, Math.ceil(this.total / this.state.size));
