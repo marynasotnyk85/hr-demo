@@ -153,7 +153,7 @@
             <button class="btn btn-ghost" type="button" (click)="cancel()">
               Cancel
             </button>
-            <button class="btn btn-primary" type="submit" [disabled]="saving()">
+            <button class="btn btn-primary" type="submit" [disabled]="saving() || form.invalid">
               {{
                 saving()
                   ? "Saving…"

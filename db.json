@@ -29,20 +29,6 @@
       "notes": "Leads the FE team, focuses on delivery and mentoring."
     },
     {
-      "id": 3,
-      "firstName": "Anna",
-      "lastName": "Bianchi",
-      "email": "anna.bianchi@example.com",
-      "departmentId": 1,
-      "title": "UI Engineer",
-      "status": "active",
-      "salary": 61000,
-      "hireDate": "2024-02-15",
-      "managerId": 2,
-      "avatarUrl": "",
-      "notes": "Design systems and accessibility focus."
-    },
-    {
       "firstName": "Luca",
       "lastName": "Ferrari",
       "email": "luca.ferrari@example.com",
@@ -220,6 +206,17 @@
       "managerId": 6,
       "avatarUrl": "",
       "notes": "New hire, onboarding in progress."
+    },
+    {
+      "firstName": "Anna",
+      "lastName": "Sironi",
+      "email": "annasiron@iexample.com",
+      "title": "HR",
+      "departmentId": 2,
+      "status": "active",
+      "salary": 40000,
+      "hireDate": "2026-01-01",
+      "id": 26
     }
   ],
   "departments": [
