@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { DashboardPageComponent } from './dashboard-page.component';
 
@@ -8,9 +11,13 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardPageComponent]
-    })
-    .compileComponents();
+      imports: [DashboardPageComponent],
+      providers: [
+        provideRouter([]),          
+        provideHttpClient(),        
+        provideHttpClientTesting(), 
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;
